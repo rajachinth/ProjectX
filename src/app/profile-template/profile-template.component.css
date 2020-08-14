@@ -1,0 +1,85 @@
+#ProfileUploadFile {
+    display: none;
+}
+#ProfileUploadButton {
+    width: 30%;
+    height: 10%;
+    padding: 0%;
+    font-size: 80%;
+}
+.ImagePath {
+    display: flex;
+}
+button:disabled {
+    cursor: not-allowed;
+}
+.ImageError {
+    width: 75%;
+    font-size: 75%;
+    margin-top: 10px;
+}
+.updateGroup {
+    display: flex;
+}
+.updateGroup button {
+    padding: 10px;
+    margin: 5px;
+}
+/* CSS Spinner */
+.lds-dual-ring {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+  }
+  .lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 50%;
+    height: 50%;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid black;
+    border-color: black transparent black transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+  }
+  @keyframes lds-dual-ring {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  #ServerSuccess {
+      color: green;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 5px;
+      font-size: 20px;
+  }
+  #ServerFail {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 5px;
+    font-size: 20px;
+  }
+
+  .serverMessage div {
+    width: 100%;
+    margin-top: 5px;
+    background-color: greenyellow;
+    padding: 5px;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+
+  .backgroundSource
+{
+    height: 100px;
+    width: 100px;
+    background-size: cover;
+    border-radius: 100%;
+}

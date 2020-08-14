@@ -1,0 +1,42 @@
+.btnSetOne {
+    display: flex;
+    justify-content: space-evenly;
+    margin:30px 0;
+}
+button:disabled {
+    cursor: not-allowed;
+}
+/* CSS Spinner */
+.lds-dual-ring {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+  }
+  .lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 50%;
+    height: 50%;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid black;
+    border-color: black transparent black transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+  }
+  @keyframes lds-dual-ring {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  .serverMessage div {
+    width: 100%;
+    margin-top: 5px;
+    background-color: greenyellow;
+    padding: 5px;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: bold;
+  }

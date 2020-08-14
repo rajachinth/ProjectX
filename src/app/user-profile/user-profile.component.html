@@ -1,0 +1,88 @@
+<div class="d-flex justify-content-center" style="margin-top: 40px;">
+    <div class="col-4 border border-secondary">
+        <div class="btnSetOne">
+            <button class="btn btn-primary" (click)="submit('newUser')" id="NewBtn">New User</button>
+            <button class="btn btn-secondary" (click)="submit('editUser')" id="EditBtn">Edit User</button>
+        </div>
+        <div *ngIf="newUser">
+            <app-profile-template>
+                <ng-content select=".containerOne"></ng-content>
+            </app-profile-template>
+        </div>
+        <div *ngIf="editUser">
+            <ng-container *ngIf="!($serverData | async); else editUserTemplate">
+                <label for="UniqueID">UniqueID</label>
+                <form [formGroup]="UserID">
+                    <div>
+                        <input  type="text" 
+                                formControlName="UniqueID"
+                                class="form-control" 
+                                placeholder="enter your UniqueID"
+                                id="UniqueID" >
+                        <div *ngIf="UserID.get('UniqueID').touched && UserID.get('UniqueID').invalid">
+                            <div class="alert alert-danger" *ngIf="UserID.get('UniqueID').errors.minlength">
+                                user entered only {{UserID.get('UniqueID').errors.minlength.actualLength}} characters
+                            </div>
+                            <div class="alert alert-danger" *ngIf="UserID.get('UniqueID').errors.maxlength">
+                                user should enter only {{UserID.get('UniqueID').errors.maxlength.requiredLength}} characters
+                            </div>
+                            <div class="alert alert-danger" *ngIf="UserID.get('UniqueID').errors.required"> 
+                                user should enter this field mandatorily
+                            </div>
+                            <div class="alert alert-danger" *ngIf="UserID.get('UniqueID').errors.fieldError"> 
+                                user should enter only numeric values
+                            </div> 
+                        </div>
+                        <div class="serverMessage">
+                            <div *ngIf="UserID.get('UniqueID').status === 'PENDING' && UserID.get('UniqueID').touched">
+                                checking the UniqueID in database 
+                            </div>
+                        </div>
+                        <div *ngIf="!(UserID.get('UniqueID').status === 'PENDING') && UserID.get('UniqueID').touched" class="serverMessage">
+                            <div *ngIf="UserID.get('UniqueID').status ==='VALID' && UserID.get('UniqueID').touched">
+                                    UniqueID is available
+                            </div>
+                        </div>
+                        <div *ngIf="UserID.get('UniqueID').status ==='INVALID' && UserID.get('UniqueID').touched" class="serverMessage">
+                            <div *ngIf="UserID.get('UniqueID').errors.UniqueID && UserID.get('UniqueID').touched">
+                                    UniqueID already exist in database
+                            </div> 
+                            <div *ngIf="UserID.get('UniqueID').errors.serverError && UserID.get('UniqueID').touched">
+                                    unknown server issue,try later
+                            </div>
+                        </div>
+                        <div  *ngIf="$isError | async" class="serverMessage">
+                            <div *ngIf="$errorMessage | async as errorMessage">
+                                {{errorMessage.message}}
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="!($isLoad | async); else spinnerLoad "
+                         class="text-center" 
+                         style="margin:10px 0;">
+                        <button [disabled]="UserID.invalid || UserID.status === 'PENDING'" 
+                                class="btn btn-primary"
+                                (click)="UserIDSubmit(UserID.value)">Submit</button>
+                    </div>
+                    <ng-template #spinnerLoad>
+                       <div class="text-center">
+                            <div class="lds-dual-ring"></div>
+                       </div>
+                    </ng-template>
+                </form>
+            </ng-container>
+            <ng-template #editUserTemplate>
+                <div *ngIf="$serverData | async as serverData">
+                    <app-profile-template [UniqueID]="serverData.UniqueID" 
+                                          [UserName]="serverData.UserName" 
+                                          [ImageFile]="serverData.ImageFile"
+                                          [IsUpdate]="isUpdate"
+                                          [ImageFileURL]="serverData.ImageData"
+                                          (responseEvent)="cancelUpdate($event)">
+                        <ng-content select=".containerOne"></ng-content>
+                    </app-profile-template>
+                </div>
+            </ng-template>
+        </div>
+    </div>    
+</div>

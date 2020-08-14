@@ -1,0 +1,151 @@
+<ng-container class="containerOne">
+    <div class="col-12">
+        <form [formGroup]="UserProfile">
+            <div class="form-group">
+                <label for="UniqueID">UniqueID</label>
+                <input formControlName="UniqueID" 
+                       type="text" 
+                       placeholder="enter your UniqueID"
+                       class="form-control" 
+                       [(ngModel)]="UniqueID"
+                       value="UniqueID"
+                       >
+                       <div *ngIf="UserProfile.get('UniqueID').touched && UserProfile.get('UniqueID').invalid">
+                        <div class="alert alert-danger" *ngIf="UserProfile.get('UniqueID').errors.minlength">
+                            user entered only {{UserProfile.get('UniqueID').errors.minlength.actualLength}} characters
+                        </div>
+                        <div class="alert alert-danger" *ngIf="UserProfile.get('UniqueID').errors.maxlength">
+                            user should enter only {{UserProfile.get('UniqueID').errors.maxlength.requiredLength}} characters
+                        </div>
+                        <div class="alert alert-danger" *ngIf="UserProfile.get('UniqueID').errors.required"> 
+                            user should enter this field mandatorily
+                        </div>
+                        <div class="alert alert-danger" *ngIf="UserProfile.get('UniqueID').errors.fieldError"> 
+                            user should enter only numeric values
+                        </div> 
+                    </div>
+                    <div class="serverMessage">
+                        <div *ngIf="UserProfile.get('UniqueID').status === 'PENDING' && UserProfile.get('UniqueID').touched">
+                            checking the UniqueID in database 
+                        </div>
+                    </div>
+                    <div *ngIf="!(UserProfile.get('UniqueID').status === 'PENDING') && UserProfile.get('UniqueID').touched" class="serverMessage">
+                        <div *ngIf="UserProfile.get('UniqueID').status ==='VALID' && UserProfile.get('UniqueID').touched">
+                                UniqueID is available
+                        </div>
+                    </div>
+                    <div *ngIf="UserProfile.get('UniqueID').status ==='INVALID' && UserProfile.get('UniqueID').touched" class="serverMessage">
+                        <div *ngIf="UserProfile.get('UniqueID').errors.UniqueID && UserProfile.get('UniqueID').touched">
+                                UniqueID already exist in database
+                        </div> 
+                        <div *ngIf="UserProfile.get('UniqueID').errors.serverError && UserProfile.get('UniqueID').touched">
+                                unknown server issue,try later
+                        </div>
+                    </div>
+              </div>
+              <div class="form-group">
+                <label for="UserName">UserName</label>
+                <input formControlName="UserName" 
+                       type="text"
+                       placeholder="enter your UserName"
+                       class="form-control" 
+                       [(ngModel)]="UserName"
+                       value="UserName"
+                       >
+                <div *ngIf="UserProfile.get('UserName').touched && UserProfile.get('UserName').invalid">
+                    <div class="alert alert-danger" *ngIf="UserProfile.get('UserName').errors.minlength">
+                        user entered only {{UserProfile.get('UserName').errors.minlength.actualLength}} characters
+                    </div>
+                    <div class="alert alert-danger" *ngIf="UserProfile.get('UserName').errors.maxlength">
+                        user should enter only {{UserProfile.get('UserName').errors.maxlength.requiredLength}} characters
+                    </div>
+                    <div class="alert alert-danger" *ngIf="UserProfile.get('UserName').errors.required"> 
+                        user should enter this field mandatorily
+                    </div>
+                    <div class="alert alert-danger" *ngIf="UserProfile.get('UserName').errors.fieldError"> 
+                        user should enter only character values
+                    </div>
+                </div>
+              </div>
+              <div>
+                  <div class="ImagePath">
+                    <button type="button"
+                            class="btn btn-secondary JqueryBTN01" 
+                            id="ProfileUploadButton"
+                            (click)="resetFile()">Upload Profile Pic</button>
+                    <p style="margin-left: 10px; color:steelblue">{{ImageFile}}</p>
+                    <input  type="file" 
+                            class="form-control-file JqueryFile01" 
+                            id="ProfileUploadFile"
+                            accept=".png,.jpeg,.jpg,.gif"
+                            (change)="addImage($event)">
+                  </div>
+                  <div class="ImageError" *ngIf="fileInValid"> 
+                    <div class="alert alert-danger">
+                       upload only .jpeg .jpg .png .gif files
+                    </div>
+                  </div>
+                  <div class="ImageError" *ngIf="fileSizeInValid"> 
+                    <div class="alert alert-danger">
+                       upload image file less than 500KB
+                    </div>
+                  </div>
+              </div>
+              <div *ngIf="!isFileData" style="width: 100%;">
+                <div class="backgroundSource" [style.background-image]="'url('+imagePathDATA+')'"></div>
+              </div>
+             <div *ngIf="isFileData">
+                <div style="width: 100%;">
+                    <div class="backgroundSource" [style.background-image]="'url('+ImageFileURL+')'"></div>
+                </div>
+            </div>
+              <div *ngIf="!IsUpdate; else updateDiv" class="text-center" style="margin-bottom: 10px;">
+                  <div *ngIf="!($isLoad | async); else spinnerLoad">
+                    <button type="button" 
+                            class="btn btn-primary"
+                            [disabled]="UserProfile.invalid || UserProfile.status === 'PENDING' || !isFileData"
+                            (click)="submitUser(UserProfile.value)">Save</button>
+                  </div>
+                  <ng-template #spinnerLoad>
+                      <div class="text-center">
+                        <div class="lds-dual-ring"></div>
+                      </div>
+                  </ng-template>
+                  <div class="text-center" *ngIf="$isError | async">
+                    <div *ngIf="$errorMessage | async as errorMessage" id="ServerFail">
+                        {{errorMessage.message}}
+                    </div>
+                  </div>
+                  <div class="text-center" id="ServerSuccess" *ngIf="$serverData | async">
+                        User registered successfuly
+                  </div>
+              </div>
+              <ng-template #updateDiv>
+                <div class="updateGroup">
+                    <div *ngIf="!($isLoad | async); else spinnerLoad" style="margin-bottom: 10px;">
+                        <button type="button" 
+                            class="btn btn-primary"
+                            [disabled]="UserProfile.invalid || UserProfile.status === 'PENDING' || !isFileData"
+                            (click)="updateUser(UserProfile.value)">Update</button>
+                        <button type="button" 
+                            class="btn btn-danger"
+                            (click)="cancel()">Cancel</button>  
+                    </div>
+                    <ng-template #spinnerLoad>
+                        <div class="text-center">
+                            <div class="lds-dual-ring"></div>
+                        </div>
+                    </ng-template>
+                </div>
+                <div class="text-center" *ngIf="$isError | async" style="margin-bottom: 10px;">
+                    <div *ngIf="$errorMessage | async as errorMessage" id="ServerFail">
+                        {{errorMessage.message}}
+                    </div>
+                </div>
+                    <div class="text-center" id="ServerSuccess" *ngIf="$serverData | async" style="margin-bottom: 10px;">
+                        User details updated successfuly
+                    </div>
+              </ng-template>
+        </form>
+    </div>    
+</ng-container>
