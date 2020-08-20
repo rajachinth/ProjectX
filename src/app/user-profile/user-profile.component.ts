@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {FormGroup,FormControl, Validators} from '@angular/forms';
 import { CharacterCheck } from '../ValidationFile/SynchronousValidation/CharacterCheck';
 import { UserProfileServiceService } from '../Services/CommonServices/user-profile-service.service';
@@ -11,7 +11,7 @@ import { UniqueDataCheckService } from '../ValidationFile/AsynchronousValidation
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css']
 })
-export class UserProfileComponent implements OnInit
+export class UserProfileComponent
 {
   newUser:Boolean=true;
   editUser:Boolean=false;
@@ -23,15 +23,6 @@ export class UserProfileComponent implements OnInit
 
   constructor(private UserProfileService:UserProfileServiceService,
               private DataCheckService:UniqueDataCheckService ) {}
-
-  ngOnInit(): void {
-    this.UserID=new FormGroup({
-                UniqueID:new FormControl('', [Validators.minLength(6),
-                                    Validators.maxLength(12),
-                                    Validators.required,
-                                    CharacterCheck.NoCharacter,
-                                  ],this.DataCheckService.uniqueNameCheck())
-                                  });}
 
   UserID=new FormGroup({
     UniqueID:new FormControl('', [Validators.minLength(6),
